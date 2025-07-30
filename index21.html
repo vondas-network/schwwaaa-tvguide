@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro TV Guide Channel</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="tv-guide">
+        <div class="top-row">
+            <video autoplay loop muted src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+            <img src="https://via.placeholder.com/400x200.png?text=TV+Info+Image" alt="Info Image" />
+        </div>
+        <div class="header" id="now-header">NOW: Loading...</div>
+        <div class="grid">
+            <div class="time-header">
+                <div>Channel</div>
+                <div>8:00 PM</div>
+                <div>8:30 PM</div>
+                <div>9:00 PM</div>
+            </div>
+            <div class="scroll-area">
+                <div class="scroll-content" id="scroll-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
