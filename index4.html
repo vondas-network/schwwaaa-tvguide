@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro TV Guide Channel</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background: black;
+            color: white;
+        }
+        
+        .tv-guide {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .top-row {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-row iframe,
+        .top-row img {
+            width: 100%;
+            height: auto;
+            border: none;
+        }
+        
+        .header {
+            background: #111;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f0;
+            text-align: center;
+        }
+        
+        .datetime {
+            color: #fff;
+        }
+        
+        .grid .time-header {
+            display: none;
+        }
+        
+        .scroll-area {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scroll-content {
+            display: flex;
+            flex-direction: column;
+            animation: scroll-up 120s linear infinite;
+        }
+        
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+        
+        .channel-row {
+            display: flex;
+            height: 100px;
+            width: 100%;
+            transition: background 0.3s;
+            font-size: 1.1em;
+        }
+        
+        .channel-row .time {
+            flex: 0 0 140px;
+            background-color: #222;
+            color: #0f0;
+            padding: 8px;
+        }
+        
+        .channel-row .title {
+            flex: 1;
+            padding: 8px;
+            border-left: 1px solid #333;
+        }
+        
+        .highlight {
+            background-color: #333;
+            color: yellow;
+        }
+        
+        @media (min-width: 600px) {
+            .top-row {
+                flex-direction: row;
+            }
+            .top-row iframe,
+            .top-row img {
+                flex: 1;
+                height: 200px;
+                object-fit: cover;
+            }
+            .header {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tv-guide">
+        <div class="logo">
+            <img src="./logo.png" alt="TV Guide Logo" />
+        </div>
+        <div class="top-row">
+            <iframe src="https://www.youtube.com/embed/e7QLoMve8BE?autoplay=1&mute=1&controls=0&modestbranding=1&showinfo=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <img src="./panel.jpg" alt="Info Image" />
+        </div>
+        <div class="header">
+            <div class="datetime" id="now-time">Loading time...</div>
+        </div>
+        <div class="grid">
+            <div class="scroll-area">
+                <div class="scroll-content" id="scroll-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const scrollContent = document.getElementById('scroll-content');
+        const nowTime = document.getElementById('now-time');
+
+        function getCurrentTimeString() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const minStr = minutes < 10 ? '0' + minutes : minutes;
+            return `${hours}:${minStr} ${ampm}`;
+        }
+
+        function renderRows() {
+            const channel = data[0];
+            const currentTime = getCurrentTimeString();
+
+            for (let i = 0; i < 2; i++) {
+                channel.schedule.forEach(entry => {
+                    const row = document.createElement('div');
+                    row.className = 'channel-row';
+
+                    if (entry.time === currentTime && i === 0) {
+                        row.classList.add('highlight');
+                    }
+
+                    row.innerHTML = `
+            <div class="time">${entry.time}</div>
+            <div class="title">${entry.title}</div>
+          `;
+                    scrollContent.appendChild(row);
+                });
+            }
+        }
+
+        function updateHeader() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            nowTime.textContent = `${dateStr}, ${timeStr} ${timeZone}`;
+        }
+
+        renderRows();
+        updateHeader();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro TV Guide Channel</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background: black;
+            color: white;
+        }
+        
+        .tv-guide {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo img {
+            max-width: 70%;
+            height: auto;
+        }
+        
+        .top-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .top-row iframe,
+        .top-row img {
+            width: 100%;
+            height: auto;
+            border: none;
+        }
+        
+        .header {
+            background: #111;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f0;
+            text-align: center;
+        }
+        
+        .datetime {
+            color: #fff;
+        }
+        
+        .grid .time-header {
+            display: none;
+        }
+        
+        .scroll-area {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scroll-content {
+            display: flex;
+            flex-direction: column;
+            animation: scroll-up 120s linear infinite;
+        }
+        
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+        
+        .channel-row {
+            display: flex;
+            width: 100%;
+            height: 100px;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            font-size: 1.1em;
+            cursor: pointer;
+            flex-wrap: wrap;
+        }
+        
+        .channel-row .time {
+            flex: 0 0 140px;
+            background-color: #222;
+            color: #0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+        
+        .channel-row .title {
+            flex: 1;
+            border-left: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 10px;
+        }
+        
+        .highlight {
+            background-color: #333;
+            color: yellow;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 9999;
+            padding: 20px;
+            display: none;
+        }
+        
+        .overlay-content {
+            background: #111;
+            padding: 20px;
+            border: 1px solid #444;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .overlay-close {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #0f0;
+        }
+        
+        @media (min-width: 768px) {
+            .top-row {
+                flex-direction: row;
+            }
+            .top-row iframe,
+            .top-row img {
+                flex: 1;
+                height: 200px;
+                object-fit: cover;
+            }
+            .header {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .channel-row {
+                flex-direction: column;
+                height: auto;
+                padding: 10px 0;
+            }
+            .channel-row .time,
+            .channel-row .title {
+                flex: unset;
+                width: 100%;
+                height: auto;
+                justify-content: center;
+                text-align: center;
+                border: none;
+            }
+            .channel-row .title {
+                border-top: 1px solid #333;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tv-guide">
+        <div class="logo">
+            <img src="./logo.png" alt="TV Guide Logo" />
+        </div>
+        <div class="top-row">
+            <iframe src="https://www.youtube.com/embed/e7QLoMve8BE?autoplay=1&mute=1&controls=0&modestbranding=1&showinfo=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <img src="./panel.jpg" alt="Info Image" />
+        </div>
+        <div class="header">
+            <div class="datetime" id="now-time">Loading time...</div>
+        </div>
+        <div class="grid">
+            <div class="scroll-area">
+                <div class="scroll-content" id="scroll-content"></div>
+            </div>
+        </div>
+    </div>
+    <div class="overlay" id="overlay">
+        <div class="overlay-content" id="overlay-content">
+            <div id="show-info"></div>
+            <div class="overlay-close" onclick="closeOverlay()">Close</div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const scrollContent = document.getElementById('scroll-content');
+        const nowTime = document.getElementById('now-time');
+        const overlay = document.getElementById('overlay');
+        const showInfo = document.getElementById('show-info');
+
+        function getCurrentTimeString() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const minStr = minutes < 10 ? '0' + minutes : minutes;
+            return `${hours}:${minStr} ${ampm}`;
+        }
+
+        function renderRows() {
+            const channel = data[0];
+            const currentTime = getCurrentTimeString();
+
+            for (let i = 0; i < 2; i++) {
+                channel.schedule.forEach(entry => {
+                    const row = document.createElement('div');
+                    row.className = 'channel-row';
+
+                    if (entry.time === currentTime && i === 0) {
+                        row.classList.add('highlight');
+                    }
+
+                    row.innerHTML = `
+            <div class="time">${entry.time}</div>
+            <div class="title">${entry.title}</div>
+          `;
+
+                    row.addEventListener('click', () => showOverlay(entry));
+                    scrollContent.appendChild(row);
+                });
+            }
+        }
+
+        function updateHeader() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            nowTime.textContent = `${dateStr}, ${timeStr} ${timeZone}`;
+        }
+
+        function showOverlay(entry) {
+            showInfo.innerHTML = `
+        <h2>${entry.title}</h2>
+        <p><strong>Time:</strong> ${entry.time}</p>
+        <p><strong>Description:</strong> ${entry.description || 'No description available.'}</p>
+      `;
+            overlay.style.display = 'flex';
+        }
+
+        function closeOverlay() {
+            overlay.style.display = 'none';
+        }
+
+        renderRows();
+        updateHeader();
+    </script>
+</body>
+
+</html>

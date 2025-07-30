@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro TV Guide Channel</title>
+    <style>
+        body {
+            background: black;
+            color: white;
+            font-family: monospace;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tv-guide {
+            width: 800px;
+            margin: 0 auto;
+            border: 2px solid #444;
+        }
+        
+        .top-row {
+            display: flex;
+            background: #111;
+        }
+        
+        .top-row video,
+        .top-row img {
+            flex: 1;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .header {
+            background: #111;
+            padding: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #0f0;
+        }
+        
+        .grid {
+            overflow: hidden;
+        }
+        
+        .time-header,
+        .channel-row {
+            display: flex;
+        }
+        
+        .time-header {
+            background: #222;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .time-header>div,
+        .channel-row>div {
+            flex: 1;
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: center;
+        }
+        
+        .scroll-area {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scroll-content {
+            display: flex;
+            flex-direction: column;
+            animation: scroll-up 30s linear infinite;
+        }
+        
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+        
+        .channel-row:nth-child(even) {
+            background: #111;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tv-guide">
+        <div class="top-row">
+            <video autoplay loop muted src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+            <img src="https://via.placeholder.com/400x200.png?text=TV+Info+Image" alt="Info Image" />
+        </div>
+        <div class="header" id="now-header">NOW: Loading...</div>
+        <div class="grid">
+            <div class="time-header">
+                <div>Channel</div>
+                <div>8:00 PM</div>
+                <div>8:30 PM</div>
+                <div>9:00 PM</div>
+            </div>
+            <div class="scroll-area">
+                <div class="scroll-content" id="scroll-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const data = [{
+            channel: "HBO",
+            number: "501",
+            schedule: [{
+                time: "8:00 PM",
+                title: "Game of Thrones"
+            }, {
+                time: "8:30 PM",
+                title: "Last Week Tonight"
+            }, {
+                time: "9:00 PM",
+                title: "The Batman"
+            }]
+        }, {
+            channel: "ESPN",
+            number: "402",
+            schedule: [{
+                time: "8:00 PM",
+                title: "SportsCenter"
+            }, {
+                time: "8:30 PM",
+                title: "NBA Tonight"
+            }, {
+                time: "9:00 PM",
+                title: "UFC Highlights"
+            }]
+        }, {
+            channel: "CBS",
+            number: "303",
+            schedule: [{
+                time: "8:00 PM",
+                title: "Evening News"
+            }, {
+                time: "8:30 PM",
+                title: "60 Minutes"
+            }, {
+                time: "9:00 PM",
+                title: "Blue Bloods"
+            }]
+        }, {
+            channel: "NBC",
+            number: "304",
+            schedule: [{
+                time: "8:00 PM",
+                title: "The Voice"
+            }, {
+                time: "8:30 PM",
+                title: "Dateline"
+            }, {
+                time: "9:00 PM",
+                title: "SNL"
+            }]
+        }, {
+            channel: "FOX",
+            number: "305",
+            schedule: [{
+                time: "8:00 PM",
+                title: "Family Guy"
+            }, {
+                time: "8:30 PM",
+                title: "Bob's Burgers"
+            }, {
+                time: "9:00 PM",
+                title: "The Simpsons"
+            }]
+        }];
+
+        const scrollContent = document.getElementById('scroll-content');
+        const nowHeader = document.getElementById('now-header');
+
+        function renderRows() {
+            for (let i = 0; i < 2; i++) { // Duplicate data for smooth loop
+                data.forEach(channel => {
+                            const row = document.createElement('div');
+                            row.className = 'channel-row';
+                            row.innerHTML = `
+            <div>${channel.number} ${channel.channel}</div>
+            ${channel.schedule.map(s => `<div>${s.title}</div>`).join('')}
+          `;
+          scrollContent.appendChild(row);
+        });
+      }
+    }
+
+    function updateHeader() {
+      const nowShow = data[0].schedule[0].title;
+      const nowChannel = data[0].channel;
+      nowHeader.textContent = `NOW: ${nowChannel} - ${nowShow}`;
+    }
+
+    renderRows();
+    updateHeader();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+body {
+    background: black;
+    color: white;
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+}
+
+.tv-guide {
+    width: 800px;
+    margin: 0 auto;
+    border: 2px solid #444;
+}
+
+.top-row {
+    display: flex;
+    background: #111;
+}
+
+.top-row video,
+.top-row img {
+    flex: 1;
+    height: 200px;
+    object-fit: cover;
+}
+
+.header {
+    background: #111;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #0f0;
+}
+
+.grid {
+    overflow: hidden;
+}
+
+.time-header,
+.channel-row {
+    display: flex;
+}
+
+.time-header {
+    background: #222;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.time-header>div,
+.channel-row>div {
+    flex: 1;
+    border: 1px solid #333;
+    padding: 6px;
+    text-align: center;
+}
+
+.scroll-area {
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+}
+
+.scroll-content {
+    display: flex;
+    flex-direction: column;
+    animation: scroll-up 30s linear infinite;
+}
+
+@keyframes scroll-up {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+.channel-row:nth-child(even) {
+    background: #111;
+}

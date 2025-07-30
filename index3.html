@@ -1,0 +1,580 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro TV Guide Channel</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .grid .time-header {
+            display: none;
+        }
+        
+        .channel-row {
+            display: flex;
+            width: 100%;
+        }
+        
+        .channel-row>div {
+            flex: 1;
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+        
+        .channel-row .time {
+            width: 120px;
+            flex: 0 0 120px;
+            background-color: #222;
+            color: #0f0;
+        }
+        
+        .channel-row .title {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tv-guide">
+        <div class="top-row">
+            <video autoplay loop muted src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+            <img src="https://via.placeholder.com/400x200.png?text=TV+Info+Image" alt="Info Image" />
+        </div>
+        <div class="header" id="now-header">Loading...</div>
+        <div class="grid">
+            <div class="scroll-area">
+                <div class="scroll-content" id="scroll-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const scrollContent = document.getElementById('scroll-content');
+        const nowHeader = document.getElementById('now-header');
+
+        function renderRows() {
+            const channel = data[0]; // assume only 1 station
+            for (let i = 0; i < 2; i++) {
+                channel.schedule.forEach(entry => {
+                    const row = document.createElement('div');
+                    row.className = 'channel-row';
+                    row.innerHTML = `
+            <div class="time">${entry.time}</div>
+            <div class="title">${entry.title}</div>
+          `;
+                    scrollContent.appendChild(row);
+                });
+            }
+        }
+
+        function updateHeader() {
+            const channel = data[0];
+            nowHeader.textContent = `${channel.channel}`;
+        }
+
+        renderRows();
+        updateHeader();
+    </script>
+</body>
+
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro TV Guide Channel</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .grid .time-header {
+            display: none;
+        }
+        
+        .channel-row {
+            display: flex;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .channel-row>div {
+            flex: 1;
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+        
+        .channel-row .time {
+            width: 120px;
+            flex: 0 0 120px;
+            background-color: #222;
+            color: #0f0;
+        }
+        
+        .channel-row .title {
+            flex: 1;
+        }
+        
+        .scroll-area {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scroll-content {
+            display: flex;
+            flex-direction: column;
+            animation: scroll-up 120s linear infinite;
+        }
+        
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+        
+        .highlight {
+            background-color: #333;
+            color: yellow;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tv-guide">
+        <div class="top-row">
+            <video autoplay loop muted src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+            <img src="https://via.placeholder.com/400x200.png?text=TV+Info+Image" alt="Info Image" />
+        </div>
+        <div class="header" id="now-header">NOW: Loading...</div>
+        <div class="grid">
+            <div class="scroll-area">
+                <div class="scroll-content" id="scroll-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const scrollContent = document.getElementById('scroll-content');
+        const nowHeader = document.getElementById('now-header');
+
+        function getCurrentTimeString() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const minStr = minutes < 10 ? '0' + minutes : minutes;
+            return `${hours}:${minStr} ${ampm}`;
+        }
+
+        function renderRows() {
+            const channel = data[0];
+            const currentTime = getCurrentTimeString();
+
+            for (let i = 0; i < 2; i++) {
+                channel.schedule.forEach(entry => {
+                    const row = document.createElement('div');
+                    row.className = 'channel-row';
+
+                    if (entry.time === currentTime && i === 0) {
+                        row.classList.add('highlight');
+                    }
+
+                    row.innerHTML = `
+            <div class="time">${entry.time}</div>
+            <div class="title">${entry.title}</div>
+          `;
+                    scrollContent.appendChild(row);
+                });
+            }
+        }
+
+        function updateHeader() {
+            const channel = data[0];
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString();
+            nowHeader.textContent = `${channel.channel} — ${dateStr}, ${timeStr}`;
+        }
+
+        renderRows();
+        updateHeader();
+    </script>
+</body>
+
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro TV Guide Channel</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .grid .time-header {
+            display: none;
+        }
+        
+        .channel-row {
+            display: flex;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .channel-row>div {
+            flex: 1;
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+        
+        .channel-row .time {
+            width: 120px;
+            flex: 0 0 120px;
+            background-color: #222;
+            color: #0f0;
+        }
+        
+        .channel-row .title {
+            flex: 1;
+        }
+        
+        .scroll-area {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scroll-content {
+            display: flex;
+            flex-direction: column;
+            animation: scroll-up 120s linear infinite;
+        }
+        
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+        
+        .highlight {
+            background-color: #333;
+            color: yellow;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #0f0;
+        }
+        
+        .header .title {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .header .datetime {
+            flex: 1;
+            text-align: right;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tv-guide">
+        <div class="top-row">
+            <video autoplay loop muted src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+            <img src="https://via.placeholder.com/400x200.png?text=TV+Info+Image" alt="Info Image" />
+        </div>
+        <div class="header">
+            <div class="title" id="now-title">NOW: Loading...</div>
+            <div class="datetime" id="now-time">Loading time...</div>
+        </div>
+        <div class="grid">
+            <div class="scroll-area">
+                <div class="scroll-content" id="scroll-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const scrollContent = document.getElementById('scroll-content');
+        const nowTitle = document.getElementById('now-title');
+        const nowTime = document.getElementById('now-time');
+
+        function getCurrentTimeString() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const minStr = minutes < 10 ? '0' + minutes : minutes;
+            return `${hours}:${minStr} ${ampm}`;
+        }
+
+        function renderRows() {
+            const channel = data[0];
+            const currentTime = getCurrentTimeString();
+
+            for (let i = 0; i < 2; i++) {
+                channel.schedule.forEach(entry => {
+                    const row = document.createElement('div');
+                    row.className = 'channel-row';
+
+                    if (entry.time === currentTime && i === 0) {
+                        row.classList.add('highlight');
+                    }
+
+                    row.innerHTML = `
+            <div class="time">${entry.time}</div>
+            <div class="title">${entry.title}</div>
+          `;
+                    scrollContent.appendChild(row);
+                });
+            }
+        }
+
+        function updateHeader() {
+            const channel = data[0];
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            nowTitle.textContent = `NOW: ${channel.channel}`;
+            nowTime.textContent = `${dateStr}, ${timeStr} ${timeZone}`;
+        }
+
+        renderRows();
+        updateHeader();
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retro TV Guide Channel</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tv-guide {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        .grid .time-header {
+            display: none;
+        }
+        
+        .channel-row {
+            display: flex;
+            width: 100%;
+            transition: background 0.3s;
+            flex-wrap: wrap;
+        }
+        
+        .channel-row>div {
+            border: 1px solid #333;
+            padding: 6px;
+        }
+        
+        .channel-row .time {
+            width: 120px;
+            background-color: #222;
+            color: #0f0;
+            flex: 0 0 120px;
+        }
+        
+        .channel-row .title {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .scroll-area {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .scroll-content {
+            display: flex;
+            flex-direction: column;
+            animation: scroll-up 120s linear infinite;
+        }
+        
+        @keyframes scroll-up {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+        
+        .highlight {
+            background-color: #333;
+            color: yellow;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #0f0;
+            flex-wrap: wrap;
+        }
+        
+        .header .title {
+            flex: 1 1 100%;
+            text-align: left;
+        }
+        
+        .header .datetime {
+            flex: 1 1 100%;
+            text-align: right;
+            color: #fff;
+        }
+        
+        .top-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .top-row video,
+        .top-row img {
+            flex: 1 1 100%;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        @media (min-width: 600px) {
+            .top-row video,
+            .top-row img {
+                flex: 1;
+                height: 200px;
+                object-fit: cover;
+            }
+            .header .title,
+            .header .datetime {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tv-guide">
+        <div class="top-row">
+            <video autoplay loop muted src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+            <img src="https://via.placeholder.com/400x200.png?text=TV+Info+Image" alt="Info Image" />
+        </div>
+        <div class="header">
+            <div class="title" id="now-title">NOW: Loading...</div>
+            <div class="datetime" id="now-time">Loading time...</div>
+        </div>
+        <div class="grid">
+            <div class="scroll-area">
+                <div class="scroll-content" id="scroll-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const scrollContent = document.getElementById('scroll-content');
+        const nowTitle = document.getElementById('now-title');
+        const nowTime = document.getElementById('now-time');
+
+        function getCurrentTimeString() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const minStr = minutes < 10 ? '0' + minutes : minutes;
+            return `${hours}:${minStr} ${ampm}`;
+        }
+
+        function renderRows() {
+            const channel = data[0];
+            const currentTime = getCurrentTimeString();
+
+            for (let i = 0; i < 2; i++) {
+                channel.schedule.forEach(entry => {
+                    const row = document.createElement('div');
+                    row.className = 'channel-row';
+
+                    if (entry.time === currentTime && i === 0) {
+                        row.classList.add('highlight');
+                    }
+
+                    row.innerHTML = `
+            <div class="time">${entry.time}</div>
+            <div class="title">${entry.title}</div>
+          `;
+                    scrollContent.appendChild(row);
+                });
+            }
+        }
+
+        function updateHeader() {
+            const channel = data[0];
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            nowTitle.textContent = `NOW: ${channel.channel}`;
+            nowTime.textContent = `${dateStr}, ${timeStr} ${timeZone}`;
+        }
+
+        renderRows();
+        updateHeader();
+    </script>
+</body>
+
+</html>
